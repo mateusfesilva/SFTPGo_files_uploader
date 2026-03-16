@@ -12,7 +12,7 @@ from requests.adapters import HTTPAdapter
 from dotenv import load_dotenv
 import urllib3
 
-load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env
+load_dotenv()
 
 LISTDIR_URL = os.getenv("LISTDIR_URL", "")
 UPLOAD_URL = os.getenv("UPLOAD_URL", "")
@@ -20,11 +20,11 @@ DASH_URL = os.getenv("DASH_URL", "")
 BASE_URL = os.getenv("BASE_URL", "")
 ORIGIN = os.getenv("ORIGIN", "")
 # O path raiz é o caminho local da primeira pasta antes do espelhamento com o sistema web
-PATH_RAIZ = r"E:\MATEUS\HIDROSUL_GOV" # A partir disso o caminho é o mesmo que o do site (PROD_6_MDS/...)
+PATH_RAIZ = os.path.normpath(os.getenv("PATH_RAIZ", ""))
 MED = input("Informe o número da medição (ex: 08): ")
 PATH_UPLOAD = input("Informe o caminho com as pastas e arquivos que deseja enviar: ")
 # Nome da primeira pasta no sistema web antes do espelhamento com o local
-REMOTE_ROOT_NAME = f"/Medições Contrato 16-2025-MIDR - HIDRO SUL/Medição {MED}/Entregas Medicao {MED}"
+REMOTE_ROOT_NAME = os.getenv("REMOTE_ROOT_NAME", "").replace("{MED}", MED)
 USUARIO = os.getenv("USUARIO", "")
 SENHA = os.getenv("SENHA", "")
 
@@ -38,10 +38,6 @@ session.headers.update({
      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36',
 })
 
-# response=session.get(DASH_URL)
-# soup = BeautifulSoup(response.text, 'html.parser')
-# find_token = soup.find('input', {'name': '_form_token'})
-# token = find_token.get('value')
 login_lock = threading.Lock()
 
 def random_colour():
@@ -260,30 +256,6 @@ def process_one_file(file_name, local_data, global_token, server_files, remote_p
     
     return ("Failed to upload ", file_name, " after ", max_retries, " attempts.\n")
 
-
-# def executar_upload_parcial():
-#     print(f"Iniciando upload:\n    {PATH_UPLOAD}")
-#     print(f"Mantendo estrutura relativa a:\n    {PATH_RAIZ}")
-#     print("=" * 100)
-
-#     if PATH_RAIZ not in PATH_UPLOAD:
-#         print("ALERTA: A pasta alvo não parece estar dentro da pasta raiz!")
-#         print("Isso pode criar pastas nos lugares errados do servidor.")
-#         continuar = input("Deseja continuar mesmo assim? (s/n): ")
-#         if continuar.lower() != 's':
-#             return
-
-#     for raiz_atual, subpastas, arquivos in os.walk(PATH_UPLOAD):
-
-#         caminho_remoto_pasta = calcular_caminho_remoto(raiz_atual)
-#         criar_pasta(caminho_remoto_pasta)
-
-#         for arquivo in arquivos:
-#             caminho_completo_local = os.path.join(raiz_atual, arquivo)
-
-#             upload_arquivo(caminho_completo_local, caminho_remoto_pasta)
-
-#     print('Processo finalizado.')
 
 def executar_upload_parcial():
     print(f"Iniciando upload:\n    {PATH_UPLOAD}")
