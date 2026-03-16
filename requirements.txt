@@ -1,0 +1,5 @@
+requests
+urllib3
+tqdm
+requests-toolbelt
+beautifulsoup4
