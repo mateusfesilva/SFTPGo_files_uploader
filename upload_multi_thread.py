@@ -13,10 +13,12 @@ from dotenv import load_dotenv
 import urllib3
 
 load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env
+
 LISTDIR_URL = os.getenv("LISTDIR_URL", "")
 UPLOAD_URL = os.getenv("UPLOAD_URL", "")
 DASH_URL = os.getenv("DASH_URL", "")
 BASE_URL = os.getenv("BASE_URL", "")
+ORIGIN = os.getenv("ORIGIN", "")
 # O path raiz é o caminho local da primeira pasta antes do espelhamento com o sistema web
 PATH_RAIZ = r"E:\MATEUS\HIDROSUL_GOV" # A partir disso o caminho é o mesmo que o do site (PROD_6_MDS/...)
 MED = input("Informe o número da medição (ex: 08): ")
@@ -32,7 +34,7 @@ session = requests.Session()
 adapter = HTTPAdapter(max_retries=3)
 session.mount('https://', adapter)
 session.headers.update({
-     'Referer': 'https://files-snsh.mdr.gov.br/web/client/login',
+     'Referer': DASH_URL,
      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36',
 })
 
@@ -58,7 +60,7 @@ def login():
         adapter = HTTPAdapter(max_retries=3)
         session.mount('https://', adapter)
         session.headers.update({
-            'Referer': 'https://files-snsh.mdr.gov.br/web/client/login',
+            'Referer': DASH_URL,
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36',
         }) 
         response=session.get(DASH_URL)
@@ -204,7 +206,7 @@ def process_one_file(file_name, local_data, global_token, server_files, remote_p
                     'Cache-Control': 'no-cache',
                     'Connection': 'close',
                     'Expect': '100-continue',
-                    'Origin': 'https://files-snsh.mdr.gov.br',
+                    'Origin': ORIGIN,
                     'Pragma': 'no-cache',
                     'Referer': referer_url,
                     'Content-Type' : 'application/octet-stream',
