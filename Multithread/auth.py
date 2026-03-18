@@ -20,23 +20,33 @@ adapter = HTTPAdapter(max_retries=retry, pool_connections=4, pool_maxsize=12)
 session.mount("https://", adapter)
 session.mount("http://", adapter)
 
-session.headers.update({    
-        'Referer': DASH_URL,
+session.headers.update(
+    {
+        "Referer": DASH_URL,
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
-})
+    }
+)
+
 
 def login():
     session.cookies.clear()
     for i in range(3):
-        session.headers.update({
-            'Referer': DASH_URL,})
+        session.headers.update(
+            {
+                "Referer": DASH_URL,
+            }
+        )
         response = session.get(DASH_URL)
         soup = BeautifulSoup(response.text, "html.parser")
         find_token = soup.find("input", {"name": "_form_token"})
         if not find_token:
             time.sleep(5)
         csrf_token = find_token.get("value")
-        payload_login = {"username": USER, "password": PASSWORD, "_form_token": csrf_token}
+        payload_login = {
+            "username": USER,
+            "password": PASSWORD,
+            "_form_token": csrf_token,
+        }
         try:
             resp_post = session.post(DASH_URL, data=payload_login)
             soup_error = BeautifulSoup(resp_post.text, "html.parser")
@@ -50,6 +60,7 @@ def login():
             pass
         time.sleep(5)
     raise Exception("Falha no login após 3 tentativas.")
+
 
 def action_token():
     for i in range(3):
