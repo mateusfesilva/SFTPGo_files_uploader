@@ -90,7 +90,6 @@ def process_one_file(
                     url_upload,
                     headers=local_headers,
                     data=f,
-                    verify=False,
                     timeout=(60, 3600),
                 )
 

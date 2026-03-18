@@ -9,9 +9,9 @@ from rich.progress import (
     TimeRemainingColumn,
 )
 
-from config import SOURCE_PATH, REMOTE_ROOT_TEMPLATE
-from auth import login, action_token, session
-from worker import calculate_remote_path, create_dir, file_exists, process_one_file
+from core.config import SOURCE_PATH, REMOTE_ROOT_TEMPLATE
+from core.auth import login, action_token, session
+from core.worker import calculate_remote_path, create_dir, file_exists, process_one_file
 
 
 def upload():
