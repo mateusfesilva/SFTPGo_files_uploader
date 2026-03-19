@@ -30,17 +30,17 @@ A standout feature of this tool is its **Terminal User Interface (TUI)**, built 
 
 ### 🚀 How to Run
 1. Clone the repository:
-Bash
+
 git clone https://github.com/mateusfesilva/SFTPGo_files_uploader
 cd your-repo-name
 
 2. Install dependencies:
-Bash
+
 pip install -r requirements.txt
 
 3. Set up Environment Variables:
 Copy the template file to create your local environment configuration:
-Bash
+
 cp .env.example .env
 Open .env and fill in your target server URLs, local paths, and credentials.
 
@@ -48,7 +48,7 @@ Open .env and fill in your target server URLs, local paths, and credentials.
 Place the server's public certificate inside the cacert.pem file in the certifi lib directory.
 
 5. Run the application:
-Bash
+
 python main.py
 
 
@@ -87,17 +87,17 @@ O grande diferencial desta ferramenta é a sua TUI (Interface de Usuário no Ter
 
 ### 🚀 Como Executar
 1. Clone o repositório:
-Bash
+   
 git clone https://github.com/mateusfesilva/SFTPGo_files_uploader
 cd nome-do-repo
 
-2. Instale as dependências:
-Bash
+3. Instale as dependências:
+
 pip install -r requirements.txt
 
 4. Configure as Variáveis de Ambiente:
 Copie o arquivo de modelo para criar sua configuração local:
-Bash
+
 cp .env.example .env
 Abra o arquivo .env e preencha com as URLs do servidor alvo, caminhos locais e suas credenciais.
 
