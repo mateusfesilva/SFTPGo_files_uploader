@@ -1,8 +1,0 @@
-.venv
-.env
-*.crt
-
-__pycache__/
-*.py[cod]
-
-/old
