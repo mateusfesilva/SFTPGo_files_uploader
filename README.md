@@ -31,27 +31,27 @@ A standout feature of this tool is its **Terminal User Interface (TUI)**, built 
 ### 🚀 How to Run
 1. Clone the repository:
 
-git clone https://github.com/mateusfesilva/SFTPGo_files_uploader
+   git clone https://github.com/mateusfesilva/SFTPGo_files_uploader
 
 2. Install dependencies:
 
-pip install -r requirements.txt
+   pip install -r requirements.txt
 
 3. Set up Environment Variables:
    
-Copy the template file to create your local environment configuration:
+   Copy the template file to create your local environment configuration:
 
-cp .env.example .env
+   cp .env.example .env
 
-Open .env and fill in your target server URLs, local paths, and credentials.
+   Open .env and fill in your target server URLs, local paths, and credentials.
 
 4. Add the Server Certificate:
    
-Place the server's public certificate inside the cacert.pem file in the certifi lib directory.
+   Place the server's public certificate inside the cacert.pem file in the certifi lib directory.
 
 6. Run the application:
 
-python main.py
+   python main.py
 
 
 <h2 id="portuguese">br Português</h2>
@@ -90,24 +90,24 @@ O grande diferencial desta ferramenta é a sua TUI (Interface de Usuário no Ter
 ### 🚀 Como Executar
 1. Clone o repositório:
    
-git clone https://github.com/mateusfesilva/SFTPGo_files_uploader
+   git clone https://github.com/mateusfesilva/SFTPGo_files_uploader
 
 3. Instale as dependências:
 
-pip install -r requirements.txt
+   pip install -r requirements.txt
 
 4. Configure as Variáveis de Ambiente:
    
-Copie o arquivo de modelo para criar sua configuração local:
+   Copie o arquivo de modelo para criar sua configuração local:
 
 cp .env.example .env
 
-Abra o arquivo .env e preencha com as URLs do servidor alvo, caminhos locais e suas credenciais.
+   Abra o arquivo .env e preencha com as URLs do servidor alvo, caminhos locais e suas credenciais.
 
 5. Adicione o Certificado do Servidor:
    
-Coloque o certificado público do servidor dentro do arquivo cacert.pem no diretório da biblioteca certifi.
+   Coloque o certificado público do servidor dentro do arquivo cacert.pem no diretório da biblioteca certifi.
 
 7. Execute a aplicação:
    
-python main.py
+   python main.py
