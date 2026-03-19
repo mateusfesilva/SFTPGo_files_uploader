@@ -100,7 +100,7 @@ O grande diferencial desta ferramenta é a sua TUI (Interface de Usuário no Ter
    
    Copie o arquivo de modelo para criar sua configuração local:
 
-cp .env.example .env
+   cp .env.example .env
 
    Abra o arquivo .env e preencha com as URLs do servidor alvo, caminhos locais e suas credenciais.
 
