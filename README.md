@@ -85,7 +85,7 @@ O grande diferencial desta ferramenta é a sua TUI (Interface de Usuário no Ter
 
 * `python-dotenv` (Gerenciamento de Variáveis de Ambiente)
 
-###🚀 Como Executar
+### 🚀 Como Executar
 1. Clone o repositório:
 Bash
 git clone https://github.com/mateusfesilva/SFTPGo_files_uploader
