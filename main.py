@@ -1,13 +1,16 @@
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from rich.live import Live
+from rich.console import Group
+from rich.panel import Panel
 from rich.progress import (
     Progress,
     BarColumn,
     SpinnerColumn,
     TextColumn,
     TimeElapsedColumn,
-    TimeRemainingColumn,
 )
+from rich import print
 
 from core.config import SOURCE_PATH, REMOTE_ROOT_TEMPLATE
 from core.auth import login, action_token, session
@@ -19,15 +22,20 @@ def upload():
     PATH_UPLOAD = input(
         "Informe o caminho com as pastas e arquivos que deseja enviar: "
     )
-    REMOTE_ROOT_NAME = REMOTE_ROOT_TEMPLATE.replace("{MED}", MED)
+    # Adicionar a medição ao nome da pasta remota usando o template
+    # REMOTE_ROOT_NAME = REMOTE_ROOT_TEMPLATE.replace("{MED}", MED)
+    REMOTE_ROOT_NAME = REMOTE_ROOT_TEMPLATE
     token = action_token()
 
-    print(f"\nIniciando upload:\n    [Origem] {PATH_UPLOAD}")
+    print("=" * 100)
+    print(f"[bold blue]Iniciando upload:[/bold blue]\n    [Origem] {PATH_UPLOAD}")
     print(f"    [Destino] {REMOTE_ROOT_NAME}")
     print("=" * 100)
 
     if SOURCE_PATH not in PATH_UPLOAD:
-        print("ALERTA: A pasta alvo não parece estar dentro da pasta raiz!")
+        print(
+            "[bold yellow]ALERTA: A pasta alvo não parece estar dentro da pasta raiz![/bold yellow]"
+        )
         continuar = input("Deseja continuar mesmo assim? (s/n): ")
         if continuar.lower() != "s":
             return
@@ -37,11 +45,11 @@ def upload():
     while dirs_to_process:
         current_dir = dirs_to_process.pop(0)
         remote_path_dir = calculate_remote_path(current_dir, REMOTE_ROOT_NAME)
-        print(remote_path_dir)
-        print(f"Criando diretório remoto: {remote_path_dir}")
+
+        print(f"[bold blue]Diretório remoto:[/bold blue] {remote_path_dir}")
         print(f"Status:", create_dir(remote_path_dir, token))
-        print("=" * 100)
-        file_in_folder = file_exists(remote_path_dir) or {}
+
+        file_in_folder = file_exists(remote_path_dir)
 
         try:
             folder_files = []
@@ -60,18 +68,46 @@ def upload():
 
             if folder_files:
                 total_files = len(folder_files)
+                ign = 0
+                upl = 0
+                err = 0
 
-                with Progress(
+                progress = Progress(
                     SpinnerColumn(),
                     TextColumn("[progress.description]{task.description}"),
                     BarColumn(),
                     TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
                     TimeElapsedColumn(),
-                ) as progress:
-                    task = progress.add_task(
-                        f"[cyan]Enviando arquivos de: {current_dir}", total=total_files
-                    )
+                    TextColumn(
+                        "[yellow]Ignorados: {task.fields[ignored_files_count]}[/yellow]"
+                    ),
+                    TextColumn(
+                        "[green]Enviados: {task.fields[uploaded_files_count]}[/green]"
+                    ),
+                    TextColumn("[red]Erros: {task.fields[error_files_count]}[/red]"),
+                )
 
+                task = progress.add_task(
+                    f"[cyan]{current_dir}",
+                    total=total_files,
+                    ignored_files_count=0,
+                    uploaded_files_count=0,
+                    error_files_count=0,
+                )
+
+                status_texto = "[grey50]Iniciando leitura dos arquivos...[/grey50]"
+
+                def gerar_painel():
+                    """Monta o frame atual unindo o Painel de texto e a Barra"""
+                    painel = Panel(
+                        status_texto,
+                        title="Último Processado",
+                        border_style="cyan",
+                        width=110,
+                    )
+                    return Group(painel, progress)
+
+                with Live(gerar_painel(), refresh_per_second=15) as live:
                     with ThreadPoolExecutor(max_workers=8) as executor:
                         futures = {}
                         for file in folder_files:
@@ -91,37 +127,45 @@ def upload():
                             try:
                                 result = future.result()
                                 if result:
-                                    progress.console.print(
-                                        f"[green]✔ Sucesso[/green] | {file_name} --> {result}"
-                                    )
+                                    upl += 1
+                                    status_texto = f"[green]✅ Sucesso | Enviado:[/green] {file_name}"
                                 else:
-                                    progress.console.print(
-                                        f"[yellow]⚠ Ignorado[/yellow] | {file_name}"
-                                    )
-                            except Exception as e:
-                                progress.console.print(
-                                    f"[red]✖ Erro[/red] | {file_name}: {e}"
+                                    ign += 1
+
+                                progress.update(
+                                    task,
+                                    uploaded_files_count=upl,
+                                    ignored_files_count=ign,
                                 )
+
+                            except Exception as e:
+                                err += 1
+                                status_texto = f"[bold red]✖ Erro no arquivo:[/bold red] {file_name} - {e}"
+                                progress.update(task, error_files_count=err)
+
                             finally:
                                 progress.advance(task)
+                                live.update(gerar_painel())
+
+                print("=" * 100)
 
         except PermissionError:
-            print(f"[red]Permissão negada para acessar: {current_dir}[/red]")
+            print(f"[bold red]Permissão negada para acessar: {current_dir}[/bold red]")
             continue
 
-    print("\nProcesso finalizado!")
+    print("=" * 39, "Processo finalizado!", "=" * 39, "\n")
 
 
 if __name__ == "__main__":
     try:
         print("=" * 100)
-        print("Autenticando...")
+        print("[bold blue]Autenticando...[/bold blue]")
         if login():
-            print("Login bem-sucedido!")
+            print(f"[bold green]Login bem-sucedido![/bold green]")
             print("=" * 100)
             upload()
         else:
-            print("Falha na autenticação. Verifique suas credenciais.")
+            print("[red]Falha na autenticação. Verifique suas credenciais.[/red]")
             print("=" * 100)
     finally:
         session.close()

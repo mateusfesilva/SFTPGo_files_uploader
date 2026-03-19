@@ -1,9 +1,23 @@
 import os
 import time
+import logging
 from urllib.parse import quote_plus
 
-from config import LISTDIR_URL, UPLOAD_URL, ORIGIN, BASE_URL, SOURCE_PATH, DASH_URL
-from auth import session, login_lock, login, action_token
+from core.config import LISTDIR_URL, UPLOAD_URL, ORIGIN, BASE_URL, SOURCE_PATH, DASH_URL
+from core.auth import session, login_lock, login, action_token
+
+
+def logging_errors(file_name, attempt):
+    os.makedirs("logs", exist_ok=True)
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        handlers=[
+            logging.FileHandler("logs/upload_errors.log"),
+            logging.StreamHandler(),
+        ],
+    )
+    return logging.error(f"Error uploading file {file_name} in attempt {attempt + 1}.")
 
 
 def calculate_remote_path(absoulte_file_path, remote_root_name):
@@ -23,7 +37,7 @@ def create_dir(remote_path, global_token):
     )
     param = {"path": remote_path}
     resp = session.post(LISTDIR_URL, params=param, timeout=(10, 30))
-    if resp.status_code not in [200, 201, 202]:
+    if resp.status_code not in [200, 201, 202, 500]:
         raise Exception(
             f"Failed to create directory {remote_path}. Status code: {resp.status_code}"
         )
@@ -37,9 +51,7 @@ def file_exists(remote_path):
             rp = session.get(LISTDIR_URL, params=param, timeout=(10, 30))
             if rp.status_code in [200, 201, 202]:
                 content = rp.json()
-                file_list = {
-                    item.get("name"): item.get("size") for item in content.get("name")
-                }
+                file_list = {item.get("name"): item.get("size") for item in content}
                 return file_list
         except Exception:
             time.sleep(5)
@@ -105,6 +117,7 @@ def process_one_file(
                 resp.raise_for_status()
 
         except Exception:
+            logging_errors(file_name, attempt)
             pass
 
         if attempt < max_retries - 1:
