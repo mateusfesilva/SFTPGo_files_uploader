@@ -1,8 +1,6 @@
 rich
+certifi
 requests
 urllib3
-tqdm
-requests-toolbelt
 beautifulsoup4
 dotenv
-rich

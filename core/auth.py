@@ -2,19 +2,20 @@ from bs4 import BeautifulSoup
 import requests
 from requests.adapters import HTTPAdapter
 import threading
-import urllib3
 from urllib3.util import Retry
+import certifi
 import time
 import re
 
-from config import CERT_PATH, DASH_URL, BASE_URL, USER, PASSWORD
+from core.config import DASH_URL, BASE_URL, USER, PASSWORD
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+# referencia os certificados em .venv\Lib\site-packages\certifi\cacert.pem
+# copie o certificado do site para o arquivo cacert.pem
+certifi.where()
 
 # Evitar race condition das threads
 login_lock = threading.Lock()
 session = requests.Session()
-session.verify = CERT_PATH
 retry = Retry(total=3, backoff_factor=1, status_forcelist=[500, 502, 503, 504])
 adapter = HTTPAdapter(max_retries=retry, pool_connections=4, pool_maxsize=12)
 session.mount("https://", adapter)
