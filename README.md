@@ -10,8 +10,6 @@
 ### 📌 About the Project
 This project is a high-performance, multithreaded Python automation tool designed to securely synchronize and upload large directories to a corporate SFTPGo server. Built specifically to handle high-latency I/O-bound operations, it maximizes available network bandwidth by multiplexing uploads across concurrent threads. 
 
-A standout feature of this tool is its **Terminal User Interface (TUI)**, built with the `rich` library, which replaces standard terminal scrolling with a clean, static, real-time dashboard.
-
 ### ✨ Key Features
 * **Maximized Bandwidth (Multithreading):** Uses `ThreadPoolExecutor` to run concurrent uploads, saturating high-speed connections while maintaining low CPU and RAM footprint.
 * **Modern TUI Dashboard:** Features a static, flicker-free terminal dashboard with real-time progress bars, success/error counters, and live file status, preventing terminal output flooding.
@@ -58,8 +56,6 @@ A standout feature of this tool is its **Terminal User Interface (TUI)**, built 
 
 ### 📌 Sobre o Projeto
 Este projeto é uma ferramenta de automação em Python de alta performance e multithread, projetada para sincronizar e enviar grandes diretórios de forma segura para um servidor corporativo (SFTPGo). Construído para lidar com gargalos de rede (I/O-bound), ele maximiza a banda disponível multiplexando os envios através de threads simultâneas.
-
-O grande diferencial desta ferramenta é a sua TUI (Interface de Usuário no Terminal), construída com a biblioteca rich, que substitui a rolagem infinita de texto por um painel de controle estático, limpo e em tempo real.
 
 ### ✨ Principais Funcionalidades
 * **Banda Maximizada (Multithreading):** Utiliza ThreadPoolExecutor para uploads simultâneos, saturando conexões de alta velocidade mantendo o uso de CPU e RAM extremamente baixos.
