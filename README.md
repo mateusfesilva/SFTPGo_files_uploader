@@ -31,7 +31,7 @@ A standout feature of this tool is its **Terminal User Interface (TUI)**, built 
 ### 🚀 How to Run
 1. Clone the repository:
 Bash
-git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
+git clone https://github.com/mateusfesilva/SFTPGo_files_uploader
 cd your-repo-name
 
 2. Install dependencies:
@@ -88,7 +88,7 @@ O grande diferencial desta ferramenta é a sua TUI (Interface de Usuário no Ter
 ###🚀 Como Executar
 1. Clone o repositório:
 Bash
-git clone [https://github.com/seu-usuario/nome-do-repo.git](https://github.com/seu-usuario/nome-do-repo.git)
+git clone https://github.com/mateusfesilva/SFTPGo_files_uploader
 cd nome-do-repo
 
 2. Instale as dependências:
