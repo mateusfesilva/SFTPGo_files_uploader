@@ -28,17 +28,6 @@ A standout feature of this tool is its **Terminal User Interface (TUI)**, built 
 * `rich` (Terminal UI & Live rendering)
 * `python-dotenv` (Environment Variables)
 
-### 📁 Project Structure
-
-project_root/
-├── main.py                # Entry point & Dashboard rendering
-├── .env.example           # Environment variables template
-├── requirements.txt       # Dependencies
-├── core/                  # Main application logic
-│   ├── config.py          # Configuration & Path routing
-│   ├── auth.py            # Session, Adapter, and Login handling
-│   └── worker.py          # Upload threads and directory scanning
-
 ### 🚀 How to Run
 1. Clone the repository:
 Bash
@@ -95,17 +84,6 @@ O grande diferencial desta ferramenta é a sua TUI (Interface de Usuário no Ter
 * `rich` (Interface de terminal e Renderização Live)
 
 * `python-dotenv` (Gerenciamento de Variáveis de Ambiente)
-
-### 📁 Estrutura do Projeto
-
-project_root/
-├── main.py                # Ponto de entrada e Renderização do Dashboard
-├── .env.example           # Template de variáveis de ambiente
-├── requirements.txt       # Dependências
-├── core/                  # Lógica principal da aplicação
-│   ├── config.py          # Configurações e Roteamento de caminhos
-│   ├── auth.py            # Gerenciamento de sessão, Adapter e Login
-│   └── worker.py          # Threads de upload e leitura de pastas
 
 ###🚀 Como Executar
 1. Clone o repositório:
