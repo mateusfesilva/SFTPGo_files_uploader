@@ -1,7 +1,6 @@
 rich
 requests
 urllib3
-tqdm
 requests-toolbelt
 beautifulsoup4
 dotenv
