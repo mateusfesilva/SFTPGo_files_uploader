@@ -29,17 +29,17 @@ This project is a high-performance, multithreaded Python automation tool designe
 ### 🚀 How to Run
 1. Clone the repository:
 
-   git clone https://github.com/mateusfesilva/SFTPGo_files_uploader
+   ```git clone https://github.com/mateusfesilva/SFTPGo_files_uploader```
 
 2. Install dependencies:
 
-   pip install -r requirements.txt
+   ```pip install -r requirements.txt```
 
 3. Set up Environment Variables:
    
    Copy the template file to create your local environment configuration:
 
-   cp .env.example .env
+   ```cp .env.example .env```
 
    Open .env and fill in your target server URLs, local paths, and credentials.
 
@@ -49,7 +49,7 @@ This project is a high-performance, multithreaded Python automation tool designe
 
 6. Run the application:
 
-   python main.py
+   ```python main.py```
 
 
 <h2 id="portuguese">br Português</h2>
@@ -86,17 +86,17 @@ Este projeto é uma ferramenta de automação em Python de alta performance e mu
 ### 🚀 Como Executar
 1. Clone o repositório:
    
-   git clone https://github.com/mateusfesilva/SFTPGo_files_uploader
+   ```git clone https://github.com/mateusfesilva/SFTPGo_files_uploader```
 
 3. Instale as dependências:
 
-   pip install -r requirements.txt
+   ```pip install -r requirements.txt```
 
 4. Configure as Variáveis de Ambiente:
    
    Copie o arquivo de modelo para criar sua configuração local:
 
-   cp .env.example .env
+   ```cp .env.example .env```
 
    Abra o arquivo .env e preencha com as URLs do servidor alvo, caminhos locais e suas credenciais.
 
@@ -106,4 +106,6 @@ Este projeto é uma ferramenta de automação em Python de alta performance e mu
 
 7. Execute a aplicação:
    
-   python main.py
+   ```python main.py```
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
