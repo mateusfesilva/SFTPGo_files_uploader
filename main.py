@@ -16,15 +16,13 @@ from core.config import SOURCE_PATH, REMOTE_ROOT_TEMPLATE
 from core.auth import login, action_token, session
 from core.worker import calculate_remote_path, create_dir, file_exists, process_one_file
 
-
 def upload():
     MED = input("Informe o número da medição: ")
     PATH_UPLOAD = input(
         "Informe o caminho com as pastas e arquivos que deseja enviar: "
     )
     # Adicionar a medição ao nome da pasta remota usando o template
-    # REMOTE_ROOT_NAME = REMOTE_ROOT_TEMPLATE.replace("{MED}", MED)
-    REMOTE_ROOT_NAME = REMOTE_ROOT_TEMPLATE
+    REMOTE_ROOT_NAME = REMOTE_ROOT_TEMPLATE.replace("{MED}", MED)
     token = action_token()
 
     print("=" * 100)
@@ -33,6 +31,8 @@ def upload():
     print("=" * 100)
 
     if SOURCE_PATH not in PATH_UPLOAD:
+        print(SOURCE_PATH)
+        print(PATH_UPLOAD)
         print(
             "[bold yellow]ALERTA: A pasta alvo não parece estar dentro da pasta raiz![/bold yellow]"
         )
@@ -45,7 +45,6 @@ def upload():
     while dirs_to_process:
         current_dir = dirs_to_process.pop(0)
         remote_path_dir = calculate_remote_path(current_dir, REMOTE_ROOT_NAME)
-
         print(f"[bold blue]Diretório remoto:[/bold blue] {remote_path_dir}")
         print(f"Status:", create_dir(remote_path_dir, token))
 

@@ -3,44 +3,57 @@ import time
 import logging
 from urllib.parse import quote_plus
 
+from pathlib import Path
+
 from core.config import LISTDIR_URL, UPLOAD_URL, ORIGIN, BASE_URL, SOURCE_PATH, DASH_URL
 from core.auth import session, login_lock, login, action_token
 
 
-def logging_errors(file_name, attempt):
+def logging_errors(file_name, attempt, stts):
     os.makedirs("logs", exist_ok=True)
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        handlers=[
-            logging.FileHandler("logs/upload_errors.log"),
-            logging.StreamHandler(),
-        ],
-    )
-    return logging.error(f"Error uploading file {file_name} in attempt {attempt + 1}.")
+    if file_name not in open("logs/upload_errors.log").read():
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            handlers=[
+                logging.FileHandler("logs/upload_errors.log"),
+                logging.StreamHandler(),
+            ],
+        )
+        return logging.error(f"Error uploading file {file_name} in attempt {attempt + 1}. Status code: {stts}.")
 
 
 def calculate_remote_path(absoulte_file_path, remote_root_name):
-    relative_path = os.path.relpath(absoulte_file_path, SOURCE_PATH)
+    relative_path = os.path.relpath(absoulte_file_path, SOURCE_PATH)    
     web_path = relative_path.replace("\\", "/")
     full_path = f"{remote_root_name}/{web_path}"
     return full_path.replace("//", "/")
 
 
 def create_dir(remote_path, global_token):
-    session.headers.update(
-        {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
-            "Referer": DASH_URL,
-            "X-CSRF-TOKEN": global_token,
-        }
-    )
-    param = {"path": remote_path}
-    resp = session.post(LISTDIR_URL, params=param, timeout=(10, 30))
-    if resp.status_code not in [200, 201, 202, 500]:
-        raise Exception(
-            f"Failed to create directory {remote_path}. Status code: {resp.status_code}"
-        )
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            session.headers.update(
+                {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+                    "Referer": DASH_URL,
+                    "X-CSRF-TOKEN": global_token,
+                }
+            )
+            param = {"path": remote_path}
+            resp = session.post(LISTDIR_URL, params=param, timeout=(10, 30))
+            if resp.status_code not in [201, 500]:
+                if attempt == 2:
+                    raise Exception(f"Failed to create directory {remote_path} after {max_retries} attempts. Status code: {resp.status_code}")
+                with login_lock:
+                    login()
+                    global_token = action_token()
+                continue
+        except Exception as e:
+            if attempt == 2:
+                raise Exception(f"Failed to create directory {remote_path} after {max_retries} attempts. Error: {str(e)}")
+            time.sleep(2**attempt)
     return resp.status_code
 
 
@@ -66,7 +79,7 @@ def process_one_file(
     time_stamp = int(time.time())
     mtime_ms = int(mtime_local * 1000)
 
-    if file_name in server_files and server_files[file_name] == local_size:
+    if (file_name in server_files and server_files[file_name] == local_size) or file_name == "Thumbs.db":
         return None
 
     for attempt in range(max_retries):
@@ -105,19 +118,25 @@ def process_one_file(
                     timeout=(60, 3600),
                 )
 
-                if resp.status_code in [401, 403]:
+                if resp.status_code in [200, 202, 401, 403]:
+                    time.sleep(2)
+                    if attempt == 2:
+                        logging_errors(file_name, attempt, stts)
                     with login_lock:
                         login()
                         global_token = action_token()
                     continue
-
-                if resp.status_code in [200, 201, 202]:
+                    
+                if resp.status_code == 201:
+                    time.sleep(1)
                     return f"Status: {resp.status_code}"
 
                 resp.raise_for_status()
 
         except Exception:
-            logging_errors(file_name, attempt)
+            if attempt == 2:
+                stts = resp.status_code
+                logging_errors(file_name, attempt, stts)
             pass
 
         if attempt < max_retries - 1:
