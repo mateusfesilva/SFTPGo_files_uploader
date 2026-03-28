@@ -13,6 +13,7 @@ This project is a high-performance, multithreaded Python automation tool designe
 ### ✨ Key Features
 * **Maximized Bandwidth (Multithreading):** Uses `ThreadPoolExecutor` to run concurrent uploads, saturating high-speed connections while maintaining low CPU and RAM footprint.
 * **Modern TUI Dashboard:** Features a static, flicker-free terminal dashboard with real-time progress bars, success/error counters, and live file status, preventing terminal output flooding.
+  <img width="855" height="121" alt="imagem (1)" src="https://github.com/user-attachments/assets/fed7f615-8552-4cb3-8d79-304ea94d63d4" />
 * **Smart Synchronization:** Checks if a file already exists on the remote server before uploading, significantly saving time and bandwidth.
 * **Advanced Session Management:** Implements Connection Pooling (`HTTPAdapter`), `Keep-Alive` tunnels, and dynamic CSRF token extraction.
 * **Resilient Authentication:** Uses Thread Locks (`threading.Lock`) to safely refresh expired sessions and cookies without interrupting active background uploads.
@@ -51,6 +52,10 @@ This project is a high-performance, multithreaded Python automation tool designe
 
    ```python main.py```
 
+   
+
+
+
 
 <h2 id="portuguese">br Português</h2>
 
@@ -60,7 +65,8 @@ Este projeto é uma ferramenta de automação em Python de alta performance e mu
 ### ✨ Principais Funcionalidades
 * **Banda Maximizada (Multithreading):** Utiliza ThreadPoolExecutor para uploads simultâneos, saturando conexões de alta velocidade mantendo o uso de CPU e RAM extremamente baixos.
 
-* **Dashboard TUI Moderno:** Painel estático no terminal com barras de progresso, contadores de sucesso/erro e status de arquivos em tempo real, evitando a "inundação" de texto na tela.
+* **Dashboard TUI Moderno:** Painel estático no terminal com barras de progresso, contadores de sucesso/erro e status de arquivos em tempo real, evitando a inundação de texto na tela.
+  <img width="855" height="121" alt="imagem (1)" src="https://github.com/user-attachments/assets/fed7f615-8552-4cb3-8d79-304ea94d63d4" />
 
 * **Sincronização Inteligente:** Verifica se o arquivo já existe no servidor remoto antes de enviá-lo, poupando tempo e internet.
 
