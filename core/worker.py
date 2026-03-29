@@ -37,7 +37,7 @@ def create_dir(remote_path, global_token):
     )
     param = {"path": remote_path}
     resp = session.post(LISTDIR_URL, params=param, timeout=(10, 30))
-    if resp.status_code not in [200, 201, 202, 500]:
+    if resp.status_code not in [201, 500]:
         raise Exception(
             f"Failed to create directory {remote_path}. Status code: {resp.status_code}"
         )
@@ -49,7 +49,7 @@ def file_exists(remote_path):
         try:
             param = {"path": remote_path}
             rp = session.get(LISTDIR_URL, params=param, timeout=(10, 30))
-            if rp.status_code in [200, 201, 202]:
+            if rp.status_code in [200, 201]:
                 content = rp.json()
                 file_list = {item.get("name"): item.get("size") for item in content}
                 return file_list
@@ -111,7 +111,7 @@ def process_one_file(
                         global_token = action_token()
                     continue
 
-                if resp.status_code in [200, 201, 202]:
+                if resp.status_code in [201]:
                     return f"Status: {resp.status_code}"
 
                 resp.raise_for_status()
