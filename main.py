@@ -1,8 +1,10 @@
 import os
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from rich.live import Live
 from rich.console import Group
 from rich.panel import Panel
+
 from rich.progress import (
     Progress,
     BarColumn,
@@ -10,11 +12,22 @@ from rich.progress import (
     TextColumn,
     TimeElapsedColumn,
 )
-from rich import print
 
+from rich import print
 from core.config import SOURCE_PATH, REMOTE_ROOT_TEMPLATE
-from core.auth import login, action_token, session
-from core.worker import calculate_remote_path, create_dir, file_exists, process_one_file
+
+from core.auth import (
+    login,
+    action_token, 
+    session,
+)
+
+from core.worker import (
+    calculate_remote_path, 
+    create_dir, 
+    file_exists, 
+    process_one_file,
+)
 
 def upload():
     MED = input("Informe o número da medição: ")
@@ -46,7 +59,7 @@ def upload():
         current_dir = dirs_to_process.pop(0)
         remote_path_dir = calculate_remote_path(current_dir, REMOTE_ROOT_NAME)
         print(f"[bold blue]Diretório remoto:[/bold blue] {remote_path_dir}")
-        print(f"Status:", create_dir(remote_path_dir, token))
+        print(f"Status:", create_dir(remote_path_dir, token)[0])
 
         file_in_folder = file_exists(remote_path_dir)
 
@@ -147,6 +160,7 @@ def upload():
                                 live.update(gerar_painel())
 
                 print("=" * 100)
+                # time.sleep(5)
 
         except PermissionError:
             print(f"[bold red]Permissão negada para acessar: {current_dir}[/bold red]")
@@ -156,6 +170,7 @@ def upload():
 
 
 if __name__ == "__main__":
+    
     try:
         print("=" * 100)
         print("[bold blue]Autenticando...[/bold blue]")
